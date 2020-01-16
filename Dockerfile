@@ -1,6 +1,6 @@
 FROM golang:1.9
 
-WORKDIR /go/src/github.com/treacher/namespace-rolebinding-operator
+WORKDIR /go/src/github.com/maniaque/namespace-sa-controller
 
 RUN useradd -u 10001 kube-operator
 
@@ -13,15 +13,15 @@ RUN glide install
 
 COPY . .
 
-RUN GOOS=linux GOARCH=amd64 go build -v -i -o bin/linux/namespace-rolebinding-operator ./cmd
+RUN GOOS=linux GOARCH=amd64 go build -v -i -o bin/linux/namespace-sa-controller ./cmd
 
 FROM scratch
-MAINTAINER Michael Treacher <m.w.treacher@gmail.com>
+MAINTAINER Maniaque <maniaque.ru@gmail.com>
 
 COPY --from=0 /etc/passwd /etc/passwd
 
 USER kube-operator
 
-COPY --from=0 /go/src/github.com/treacher/namespace-rolebinding-operator/bin/linux/namespace-rolebinding-operator .
+COPY --from=0 /go/src/github.com/maniaque/namespace-sa-controller/bin/linux/namespace-sa-controller .
 
-ENTRYPOINT ["./namespace-rolebinding-operator"]
+ENTRYPOINT ["./namespace-sa-controller"]

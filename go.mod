@@ -1,4 +1,4 @@
-module namespace-rolebinding
+module namespace-sa
 
 go 1.13
 
@@ -8,7 +8,7 @@ require (
 	github.com/googleapis/gnostic v0.3.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/imdario/mergo v0.3.8 // indirect
-	github.com/treacher/namespace-rolebinding-operator/pkg/controller v0.0.0-00010101000000-000000000000
+	github.com/maniaque/namespace-sa-controller/pkg/controller v0.0.0-00010101000000-000000000000
 	golang.org/x/crypto v0.0.0-20191119213627-4f8c1d86b1ba // indirect
 	golang.org/x/net v0.0.0-20191119073136-fc4aabc6c914 // indirect
 	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e // indirect
@@ -21,4 +21,4 @@ require (
 	k8s.io/utils v0.0.0-20191114200735-6ca3b61696b6 // indirect
 )
 
-replace github.com/treacher/namespace-rolebinding-operator/pkg/controller => ./pkg/controller
+replace github.com/maniaque/namespace-sa-controller/pkg/controller => ./pkg/controller

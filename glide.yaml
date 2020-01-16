@@ -1,3 +1,3 @@
-package: github.com/treacher/namespace-rolebinding-operator
+package: github.com/maniaque/namespace-sa-controller
 import:
 - package: k8s.io/client-go
