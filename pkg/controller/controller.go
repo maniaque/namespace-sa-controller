@@ -70,19 +70,38 @@ func (c *NamespaceController) createRoleBinding(obj interface{}) {
 	namespaceObj := obj.(*v1.Namespace)
 	namespaceName := namespaceObj.Name
 
+	sa := &v1.ServiceAccount{
+                TypeMeta: metav1.TypeMeta{
+                        Kind:       "ServiceAccount",
+                        APIVersion: "v1",
+                },
+                ObjectMeta: metav1.ObjectMeta{
+                        Name:      fmt.Sprintf("sa-%s", namespaceName),
+                        Namespace: namespaceName,
+                },
+	}
+
+	_, err := c.kclient.CoreV1().ServiceAccounts(namespaceName).Create(sa)
+
+	if err != nil {
+		log.Println(fmt.Sprintf("Failed to create Service Account: %s", err.Error()))
+	} else {
+		log.Println(fmt.Sprintf("Created Service Account for Namespace: %s", sa.Name))
+	}
+
 	roleBinding := &v1beta1.RoleBinding{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "RoleBinding",
 			APIVersion: "rbac.authorization.k8s.io/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      fmt.Sprintf("ad-kubernetes-%s", namespaceName),
+			Name:      fmt.Sprintf("sa-%s", namespaceName),
 			Namespace: namespaceName,
 		},
 		Subjects: []v1beta1.Subject{
 			v1beta1.Subject{
-				Kind: "Group",
-				Name: fmt.Sprintf("ad-kubernetes-%s", namespaceName),
+				Kind: "ServiceAccount",
+				Name: fmt.Sprintf("sa-%s", namespaceName),
 			},
 		},
 		RoleRef: v1beta1.RoleRef{
@@ -92,11 +111,11 @@ func (c *NamespaceController) createRoleBinding(obj interface{}) {
 		},
 	}
 
-	_, err := c.kclient.RbacV1().RoleBindings(namespaceName).Create(roleBinding)
+	_, err1 := c.kclient.RbacV1().RoleBindings(namespaceName).Create(roleBinding)
 
-	if err != nil {
-		log.Println(fmt.Sprintf("Failed to create Role Binding: %s", err.Error()))
+	if err1 != nil {
+		log.Println(fmt.Sprintf("Failed to create Role Binding: %s", err1.Error()))
 	} else {
-		log.Println(fmt.Sprintf("Created AD RoleBinding for Namespace: %s", roleBinding.Name))
+		log.Println(fmt.Sprintf("Created RoleBinding for Namespace: %s", roleBinding.Name))
 	}
 }
